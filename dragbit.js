@@ -9,11 +9,15 @@
   methods = {
     fairlyHighZIndex: '10',
 
-    draggable: function ($element, $handle) {
+    setup: function ($element, settings) {
       $element.css("position", "absolute");
-      $handle.mousedown(function (e) {
+      settings.handle.mousedown(function (e) {
         methods.startDragging(e, $element);
       });
+
+      $element.bind("dragStart", settings.dragStart);
+      $element.bind("dragging", settings.dragging);
+      $element.bind("dragStop", settings.dragStop);
     },
 
     addDocumentListeners: function () {
@@ -84,10 +88,14 @@
 
   $.fn.draggable = function (options) {
     var settings = $.extend({
-      handle: this
+      handle: this,
+      dragStart: function () {},
+      dragging: function () {},
+      dragStop: function () {}
     }, options);
 
-    methods.draggable(this, settings.handle);
+    methods.setup(this, settings);
+
     return this;
   };
 }(jQuery));

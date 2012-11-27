@@ -11,6 +11,7 @@ DOM:
 ```html
 <div id="elementToDrag">
   <div class="handle"></div>
+  <p>I'll be dragged</p>
 </div>
 ```
 
@@ -26,6 +27,24 @@ To make it draggable only when dragging the handle element:
 var $with_handle = $('#elementToDrag');
 $with_handle.draggable({
   handle: $('span', with_handle)
+});
+```
+
+You can add the events `dragStart`, `dragging` and `dragStop` to the element via the normal `bind` of jQuery. You can also bind them when calling `draggable`:
+
+```js
+var $events = $('#elementToDrag');
+var $info = $('p', events);
+$events.draggable({
+  dragStart: function(e, position) {
+    $info.html('dragStart: ' + position.left + ', ' + position.top);
+  },
+  dragging: function(e, position) {
+    $info.html('dragging: ' + position.left + ', ' + position.top);
+  },
+  dragStop: function(e, position) {
+    $info.html('dragStop: ' + position.left + ', ' + position.top);
+  }
 });
 ```
 

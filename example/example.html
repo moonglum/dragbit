@@ -62,16 +62,16 @@
       <pre><code class="javascript">
   var $events = $('#events');
   var $info = $('p', events);
-  $events.draggable();
-
-  $events.bind("dragStart", function(e, position) {
-    $info.html('dragStart: ' + position.left + ', ' + position.top);
-  });
-  $events.bind("dragging", function(e, position) {
-    $info.html('dragging: ' + position.left + ', ' + position.top);
-  });
-  $events.bind("dragStop", function(e, position) {
-    $info.html('dragStop: ' + position.left + ', ' + position.top);
+  $events.draggable({
+    dragStart: function(e, position) {
+      $info.html('dragStart: ' + position.left + ', ' + position.top);
+    },
+    dragging: function(e, position) {
+      $info.html('dragging: ' + position.left + ', ' + position.top);
+    },
+    dragStop: function(e, position) {
+      $info.html('dragStop: ' + position.left + ', ' + position.top);
+    }
   });
       </code></pre>
     </div>
