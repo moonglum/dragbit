@@ -69,45 +69,30 @@ describe('dragbit', function () {
     describe('should trigger events', function () {
       it('when drag starts', function (done) {
         draggable(draggableBox);
-        draggableBox.whenDragStarts(function (event) {
-          assertTopLeftPosition([event.x, event.y],
+        draggableBox.bind("dragStart", function (e, position) {
+          assertTopLeftPosition([position.left, position.top],
                                 [initialPosition.left, initialPosition.top],
                                 done
                                );
-          expect(event.mouseEvent.originalEvent).to.be.a(MouseEvent);
+          expect(e.type).to.be("dragStart");
         });
         dragElementTo(draggableBox);
       });
 
-      it('should prevent the drag start action when any listener returns false', function () {
-        var originalPosition, lastPosition;
-        draggable(draggableBox);
-        draggableBox.whenDragStarts(function () {
-          return false;
-        });
-        originalPosition = $(draggableBox).position();
-        dragElementTo(draggableBox, [555, 666]);
-
-        lastPosition = $(draggableBox).position();
-        expect(lastPosition.top).to.be(originalPosition.top);
-        expect(lastPosition.left).to.be(originalPosition.left);
-      });
-
-
       it('when dragging', function (done) {
         draggable(draggableBox);
-        draggableBox.whenDragging(function (event) {
-          assertTopLeftPosition([event.x, event.y], [222, 111], done);
-          expect(event.mouseEvent).to.be.a(MouseEvent);
+        draggableBox.bind("dragging", function (e, position) {
+          assertTopLeftPosition([position.left, position.top], [222, 111], done);
+          expect(e.type).to.be("dragging");
         });
         dragElementTo(draggableBox, [222, 111]);
       });
 
       it('when drag stops', function (done) {
         draggable(draggableBox);
-        draggableBox.whenDragStops(function (event) {
-          assertTopLeftPosition([event.x, event.y], [555, 666], done);
-          expect(event.mouseEvent).to.be.a(MouseEvent);
+        draggableBox.bind("dragStop", function (e, position) {
+          assertTopLeftPosition([position.left, position.top], [555, 666], done);
+          expect(e.type).to.be("dragStop");
         });
         dragElementTo(draggableBox, [111, 222], [333, 444], [555, 666]);
       });

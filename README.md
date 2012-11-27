@@ -25,14 +25,16 @@ To make it draggable only when dragging the handle element:
 var $events = $('#events');
 var $info = $('p', events);
 draggable($events);
-function setInfo(type) {
-  return function(event) {
-    $info.html(type + ': ' + event.x + ', ' + event.y);
-  }
-}
-$events.whenDragStarts(setInfo('Start'));
-$events.whenDragging(setInfo('Dragging'));
-$events.whenDragStops(setInfo('Stop'));
+
+$events.bind("dragStart", function(e, position) {
+  $info.html('dragStart: ' + position.left + ', ' + position.top);
+});
+$events.bind("dragging", function(e, position) {
+  $info.html('dragging: ' + position.left + ', ' + position.top);
+});
+$events.bind("dragStop", function(e, position) {
+  $info.html('dragStop: ' + position.left + ', ' + position.top);
+});
 ```
 
 ## AMD
