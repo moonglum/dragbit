@@ -1,5 +1,5 @@
-source = draggable.js
-minified = draggable.min.js
+source = dragbit.js
+minified = dragbit.min.js
 
 minify:
 	@echo "> Minifying..."

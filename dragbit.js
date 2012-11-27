@@ -1,12 +1,12 @@
 !(function(moduleName, definition) {
-    // Whether to expose Draggable as an AMD module or to the global object.
+    // Whether to expose dragbit as an AMD module or to the global object.
     if (typeof define === 'function' && typeof define.amd === 'object') define(definition);
     else this[moduleName] = definition();
 
 })('draggable', function definition() {
     var currentElement;
     var fairlyHighZIndex = '10';
-    
+
     function draggable(element, handle) {
         handle = handle || element;
         setPositionType(element);
@@ -34,7 +34,6 @@
     function startDragging(event, element) {
         currentElement && sendToBack(currentElement);
         currentElement = bringToFront(element);
-        
 
         var initialPosition = getInitialPosition(currentElement);
         currentElement.style.left = inPixels(initialPosition.left);
