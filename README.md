@@ -15,22 +15,29 @@ DOM:
 To make the whole element draggable:
 
 ```js
-var elementToDrag = document.getElementById('elementToDrag');
-draggable(elementToDrag);
+var $with_handle = $('#with_handle');
+draggable($with_handle, $('span', with_handle));
 ```
 
 To make it draggable only when dragging the handle element:
 
 ```js
-var elementToDrag = document.getElementById('elementToDrag');
-var handle = elementToDrag.getElementsByClassName('handle')[0];    
-draggable(elementToDrag, handle);
+var $events = $('#events');
+var $info = $('p', events);
+draggable($events);
+function setInfo(type) {
+  return function(event) {
+    $info.html(type + ': ' + event.x + ', ' + event.y);
+  }
+}
+$events.whenDragStarts(setInfo('Start'));
+$events.whenDragging(setInfo('Dragging'));
+$events.whenDragStops(setInfo('Stop'));
 ```
 
-## Notes
+## AMD
 
-* You have to provide the raw element, not the one wrapped by your favorite DOM query lib. Using jQuery, for example, you'd need to do something like `var elementToDrag = $('#elementToDrag').get(0);`
-* If you are using AMD (e.g. require.js) this lib becomes a module. Otherwise it'll create a global `draggable`.
+If you are using AMD (e.g. require.js) this lib becomes a module. Otherwise it'll create a global `draggable`.
 
 ## Browser Compatibility
 

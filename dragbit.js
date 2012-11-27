@@ -12,7 +12,7 @@
   }
 }('draggable', function definition() {
   "use strict";
-  var currentElement,
+  var $currentElement,
     fairlyHighZIndex = '10',
     draggable,
     setPositionType,
@@ -29,43 +29,43 @@
     repositionElement,
     removeDocumentListeners;
 
-  draggable = function (element, handle) {
-    handle = handle || element;
-    setPositionType(element);
-    setDraggableListeners(element);
-    handle.addEventListener('mousedown', function (event) {
-      startDragging(event, element);
+  draggable = function ($element, $handle) {
+    $handle = $handle || $element;
+    setPositionType($element);
+    setDraggableListeners($element);
+    $handle.mousedown(function (event) {
+      startDragging(event, $element);
     });
   };
 
-  setPositionType = function (element) {
-    element.style.position = 'absolute';
+  setPositionType = function ($element) {
+    $element.css("position", "absolute");
   };
 
-  setDraggableListeners = function (element) {
-    element.draggableListeners = {
+  setDraggableListeners = function ($element) {
+    $element.draggableListeners = {
       start: [],
       drag: [],
       stop: []
     };
-    element.whenDragStarts = addListener(element, 'start');
-    element.whenDragging = addListener(element, 'drag');
-    element.whenDragStops = addListener(element, 'stop');
+    $element.whenDragStarts = addListener($element, 'start');
+    $element.whenDragging = addListener($element, 'drag');
+    $element.whenDragStops = addListener($element, 'stop');
   };
 
-  startDragging = function (event, element) {
+  startDragging = function (event, $element) {
     var initialPosition, okToGoOn;
 
-    if (currentElement) {
-      sendToBack(currentElement);
+    if ($currentElement) {
+      sendToBack($currentElement);
     }
-    currentElement = bringToFront(element);
+    $currentElement = bringToFront($element);
 
-    initialPosition = getInitialPosition(currentElement);
-    currentElement.style.left = inPixels(initialPosition.left);
-    currentElement.style.top = inPixels(initialPosition.top);
-    currentElement.lastXPosition = event.clientX;
-    currentElement.lastYPosition = event.clientY;
+    initialPosition = getInitialPosition($currentElement);
+    $currentElement.css("left", inPixels(initialPosition.left));
+    $currentElement.css("top", inPixels(initialPosition.top));
+    $currentElement.lastXPosition = event.clientX;
+    $currentElement.lastYPosition = event.clientY;
 
     okToGoOn = triggerEvent('start', {
       x: initialPosition.left,
@@ -79,15 +79,15 @@
     addDocumentListeners();
   };
 
-  addListener = function (element, type) {
+  addListener = function ($element, type) {
     return function (listener) {
-      element.draggableListeners[type].push(listener);
+      $element.draggableListeners[type].push(listener);
     };
   };
 
   triggerEvent = function (type, args) {
     var result = true,
-      listeners = currentElement.draggableListeners[type],
+      listeners = $currentElement.draggableListeners[type],
       i;
 
     for (i = listeners.length - 1; i >= 0; i -= 1) {
@@ -98,16 +98,14 @@
     return result;
   };
 
-  sendToBack = function (element) {
+  sendToBack = function ($element) {
     var decreasedZIndex = fairlyHighZIndex - 1;
-    element.style['z-index'] = decreasedZIndex;
-    element.style.zIndex = decreasedZIndex;
+    $element.css('z-index', decreasedZIndex);
   };
 
-  bringToFront = function (element) {
-    element.style['z-index'] = fairlyHighZIndex;
-    element.style.zIndex = fairlyHighZIndex;
-    return element;
+  bringToFront = function ($element) {
+    $element.css('z-index', fairlyHighZIndex);
+    return $element;
   };
 
   addDocumentListeners = function () {
@@ -116,35 +114,8 @@
     document.addEventListener('mouseup', removeDocumentListeners);
   };
 
-  getInitialPosition = function (element) {
-    var top = 0,
-      left = 0,
-      currentElement = element,
-      computedStyle,
-      margin_left,
-      border_left,
-      margin_top,
-      border_top;
-
-    do {
-      top += currentElement.offsetTop;
-      left +=  currentElement.offsetLeft;
-    } while (currentElement === currentElement.offsetParent);
-
-    computedStyle = window.getComputedStyle ? window.getComputedStyle(element) : false;
-    if (computedStyle) {
-      margin_left = (parseInt(computedStyle['margin-left'], 10) || 0);
-      border_left = (parseInt(computedStyle['border-left'], 10) || 0);
-      margin_top = (parseInt(computedStyle['margin-top'], 10) || 0);
-      border_top = (parseInt(computedStyle['border-top'], 10) || 0);
-      left = left - margin_left - border_left;
-      top = top - margin_top - margin_left;
-    }
-
-    return {
-      top: top,
-      left: left
-    };
+  getInitialPosition = function ($element) {
+    return $element.position();
   };
 
   inPixels = function (value) {
@@ -163,22 +134,25 @@
   };
 
   repositionElement = function (event) {
-    var style, elementXPosition, elementYPosition, elementNewXPosition, elementNewYPosition;
+    var elementXPosition, elementYPosition, elementNewXPosition, elementNewYPosition;
 
-    style = currentElement.style;
-    elementXPosition = parseInt(style.left, 10);
-    elementYPosition = parseInt(style.top, 10);
+    elementXPosition = parseInt($currentElement.css("left"), 10);
+    elementYPosition = parseInt($currentElement.css("top"), 10);
 
-    elementNewXPosition = elementXPosition + (event.clientX - currentElement.lastXPosition);
-    elementNewYPosition = elementYPosition + (event.clientY - currentElement.lastYPosition);
+    elementNewXPosition = elementXPosition + (event.clientX - $currentElement.lastXPosition);
+    elementNewYPosition = elementYPosition + (event.clientY - $currentElement.lastYPosition);
 
-    style.left = inPixels(elementNewXPosition);
-    style.top = inPixels(elementNewYPosition);
+    $currentElement.css("left", inPixels(elementNewXPosition));
+    $currentElement.css("top", inPixels(elementNewYPosition));
 
-    currentElement.lastXPosition = event.clientX;
-    currentElement.lastYPosition = event.clientY;
+    $currentElement.lastXPosition = event.clientX;
+    $currentElement.lastYPosition = event.clientY;
 
-    triggerEvent('drag', { x: elementNewXPosition, y: elementNewYPosition, mouseEvent: event });
+    triggerEvent('drag', {
+      x: elementNewXPosition,
+      y: elementNewYPosition,
+      mouseEvent: event
+    });
   };
 
   removeDocumentListeners = function (event) {
@@ -188,9 +162,13 @@
     document.removeEventListener('mousemove', repositionElement);
     document.removeEventListener('mouseup', removeDocumentListeners);
 
-    left = parseInt(currentElement.style.left, 10);
-    top = parseInt(currentElement.style.top, 10);
-    triggerEvent('stop', { x: left, y: top, mouseEvent: event });
+    left = parseInt($currentElement.css("left"), 10);
+    top = parseInt($currentElement.css("top"), 10);
+    triggerEvent('stop', {
+      x: left,
+      y: top,
+      mouseEvent: event
+    });
   };
 
   return draggable;
