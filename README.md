@@ -1,8 +1,8 @@
 # dragbit
 
-*A jQuert Plugin to make your dom elements draggable.*
+*A jQuert Plugin to make your DOM elements draggable.*
 
-I've ran the tests in Chrome. If you find any incompatibility or want to support other browsers, please do a pull request with the fix! :-)
+I've ran the tests in Chrome and Safari. If you find any incompatibility or want to support other browsers, please do a pull request with the fix! :-)
 
 ## Examples
 
