@@ -31,13 +31,13 @@ describe('dragbit', function () {
   });
 
   it('when making an element draggable, should set its position as absolute', function () {
-    draggable(draggableBox);
+    draggableBox.draggable();
     expect($(draggableBox).css('position')).to.be('absolute');
   });
 
   describe('when dragging an element to a new position', function () {
     it('should update the element\'s position', function () {
-      draggable(draggableBox);
+      draggableBox.draggable();
       dragElementTo(draggableBox, [310, 220]);
 
       var actualPosition = $(draggableBox).position();
@@ -47,7 +47,7 @@ describe('dragbit', function () {
 
     var fairlyHighZIndex = '10';
     it('should bring the element to front', function () {
-      draggable(draggableBox);
+      draggableBox.draggable();
       dragElementTo(draggableBox);
 
       expect($(draggableBox).css('z-index')).to.be(fairlyHighZIndex);
@@ -57,8 +57,8 @@ describe('dragbit', function () {
       var previousElement, decreasedZIndex;
       previousElement = $('<div style="width:100px;height:100px;position:fixed;">');
       $('body').append(previousElement);
-      draggable(previousElement);
-      draggable(draggableBox);
+      previousElement.draggable();
+      draggableBox.draggable();
       dragElementTo(previousElement);
 
       dragElementTo(draggableBox, 0, 0);
@@ -68,7 +68,7 @@ describe('dragbit', function () {
 
     describe('should trigger events', function () {
       it('when drag starts', function (done) {
-        draggable(draggableBox);
+        draggableBox.draggable();
         draggableBox.bind("dragStart", function (e, position) {
           assertTopLeftPosition([position.left, position.top],
                                 [initialPosition.left, initialPosition.top],
@@ -80,7 +80,7 @@ describe('dragbit', function () {
       });
 
       it('when dragging', function (done) {
-        draggable(draggableBox);
+        draggableBox.draggable();
         draggableBox.bind("dragging", function (e, position) {
           assertTopLeftPosition([position.left, position.top], [222, 111], done);
           expect(e.type).to.be("dragging");
@@ -89,7 +89,7 @@ describe('dragbit', function () {
       });
 
       it('when drag stops', function (done) {
-        draggable(draggableBox);
+        draggableBox.draggable();
         draggableBox.bind("dragStop", function (e, position) {
           assertTopLeftPosition([position.left, position.top], [555, 666], done);
           expect(e.type).to.be("dragStop");
@@ -117,7 +117,7 @@ describe('dragbit', function () {
       handle = $('<div style="height:20px;">');
       $(draggableBox).append(handle);
 
-      draggable(draggableBox, handle);
+      draggableBox.draggable({handle: handle});
     });
 
     describe('via handle', function () {

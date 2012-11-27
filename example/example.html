@@ -2,7 +2,6 @@
 <html>
   <head>
     <title>Dragbit</title>
-    <link rel="stylesheet" href="https://raw.github.com/indexzero/code-highlighter/master/syntax.css">
     <link rel="stylesheet" href="example.css">
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js" type="text/javascript"></script>
     <script src="../dragbit.js" type="text/javascript"></script>
@@ -27,8 +26,7 @@
 
     <div class="source depressed">
       <pre><code class="javascript">
-  var $free_bounds = $('#free_bounds');
-  draggable($free_bounds);
+  $('#free_bounds').draggable();
       </code></pre>
     </div>
   </div>
@@ -44,7 +42,9 @@
     <div class="source depressed">
       <pre><code class="javascript">
   var $with_handle = $('#with_handle');
-  draggable($with_handle, $('span', with_handle));
+  $with_handle.draggable({
+    handle: $('span', with_handle)
+  });
       </code></pre>
     </div>
   </div>
@@ -62,7 +62,7 @@
       <pre><code class="javascript">
   var $events = $('#events');
   var $info = $('p', events);
-  draggable($events);
+  $events.draggable();
 
   $events.bind("dragStart", function(e, position) {
     $info.html('dragStart: ' + position.left + ', ' + position.top);

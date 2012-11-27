@@ -1,102 +1,93 @@
 /*jslint browser: true,
          indent: 2,
          maxlen: 100 */
-/*global $ */
-(function (moduleName, definition) {
+/*global jQuery */
+(function ($) {
   "use strict";
-  // Whether to expose dragbit as an AMD module or to the global object.
-  if (typeof window.define === 'function' && typeof window.define.amd === 'object') {
-    window.define(definition);
-  } else {
-    window[moduleName] = definition();
-  }
-}('draggable', function definition() {
-  "use strict";
-  var $currentElement,
-    fairlyHighZIndex = '10',
-    draggable,
-    startDragging,
-    stopDragging,
-    addListener,
-    bringToFront,
-    calculateNewPosition,
-    cancelDocumentSelection,
-    continueDragging,
-    moveCurrentElement,
-    addDocumentListeners,
-    removeDocumentListeners;
+  var $currentElement, methods;
 
-  draggable = function ($element, $handle) {
-    $handle = $handle || $element;
-    $element.css("position", "absolute");
-    $handle.mousedown(function (e) {
-      startDragging(e, $element);
-    });
-  };
+  methods = {
+    fairlyHighZIndex: '10',
 
-  addDocumentListeners = function () {
-    document.addEventListener('selectstart', cancelDocumentSelection);
-    document.addEventListener('mousemove', continueDragging);
-    document.addEventListener('mouseup', stopDragging);
-  };
+    draggable: function ($element, $handle) {
+      $element.css("position", "absolute");
+      $handle.mousedown(function (e) {
+        methods.startDragging(e, $element);
+      });
+    },
 
-  removeDocumentListeners = function () {
-    document.removeEventListener('selectstart', cancelDocumentSelection);
-    document.removeEventListener('mousemove', continueDragging);
-    document.removeEventListener('mouseup', stopDragging);
-  };
+    addDocumentListeners: function () {
+      document.addEventListener('selectstart', methods.cancelDocumentSelection);
+      document.addEventListener('mousemove', methods.continueDragging);
+      document.addEventListener('mouseup', methods.stopDragging);
+    },
 
-  startDragging = function (e, $element) {
-    bringToFront($element);
-    $currentElement = $element;
-    moveCurrentElement(e, $currentElement.position());
-    addDocumentListeners();
-    $currentElement.trigger("dragStart", $currentElement.position());
-  };
+    removeDocumentListeners: function () {
+      document.removeEventListener('selectstart', methods.cancelDocumentSelection);
+      document.removeEventListener('mousemove', methods.continueDragging);
+      document.removeEventListener('mouseup', methods.stopDragging);
+    },
 
-  continueDragging = function (e) {
-    moveCurrentElement(e, calculateNewPosition(e));
-    $currentElement.trigger("dragging", $currentElement.position());
-  };
+    startDragging: function (e, $element) {
+      methods.bringToFront($element);
+      $currentElement = $element;
+      methods.moveCurrentElement(e, $currentElement.position());
+      methods.addDocumentListeners();
+      $currentElement.trigger("dragStart", $currentElement.position());
+    },
 
-  stopDragging = function (e) {
-    removeDocumentListeners();
-    $currentElement.trigger("dragStop", $currentElement.position());
-  };
+    continueDragging: function (e) {
+      methods.moveCurrentElement(e, methods.calculateNewPosition(e));
+      $currentElement.trigger("dragging", $currentElement.position());
+    },
 
-  bringToFront = function ($element) {
-    if ($currentElement) {
-      $currentElement.css('z-index', fairlyHighZIndex - 1);
+    stopDragging: function (e) {
+      methods.removeDocumentListeners();
+      $currentElement.trigger("dragStop", $currentElement.position());
+    },
+
+    bringToFront: function ($element) {
+      if ($currentElement) {
+        $currentElement.css('z-index', methods.fairlyHighZIndex - 1);
+      }
+      $element.css('z-index', methods.fairlyHighZIndex);
+    },
+
+    moveCurrentElement: function (e, position) {
+      $currentElement.css("left", position.left);
+      $currentElement.css("top", position.top);
+      $currentElement.data("lastXPosition", e.clientX);
+      $currentElement.data("lastYPosition", e.clientY);
+    },
+
+    calculateNewPosition: function (e) {
+      var elementXPosition = parseInt($currentElement.css("left"), 10),
+        elementYPosition = parseInt($currentElement.css("top"), 10);
+
+      return {
+        left: elementXPosition + (e.clientX - $currentElement.data("lastXPosition")),
+        top: elementYPosition + (e.clientY - $currentElement.data("lastYPosition"))
+      };
+    },
+
+    cancelDocumentSelection: function (e) {
+      if (e.preventDefault) {
+        e.preventDefault();
+      }
+      if (e.stopPropagation) {
+        e.stopPropagation();
+      }
+      e.returnValue = false;
+      return false;
     }
-    $element.css('z-index', fairlyHighZIndex);
   };
 
-  moveCurrentElement = function (e, position) {
-    $currentElement.css("left", position.left);
-    $currentElement.css("top", position.top);
-    $currentElement.data("lastXPosition", e.clientX);
-    $currentElement.data("lastYPosition", e.clientY);
+  $.fn.draggable = function (options) {
+    var settings = $.extend({
+      handle: this
+    }, options);
+
+    methods.draggable(this, settings.handle);
+    return this;
   };
-
-  calculateNewPosition = function (e) {
-    var elementXPosition = parseInt($currentElement.css("left"), 10),
-      elementYPosition = parseInt($currentElement.css("top"), 10),
-      elementNewXPosition = elementXPosition + (e.clientX - $currentElement.data("lastXPosition")),
-      elementNewYPosition = elementYPosition + (e.clientY - $currentElement.data("lastYPosition"));
-
-    return {left: elementNewXPosition, top: elementNewYPosition};
-  };
-
-  cancelDocumentSelection = function (e) {
-    if (e.preventDefault) {
-      e.preventDefault();
-    }
-    if (e.stopPropagation) {
-      e.stopPropagation();
-    }
-    e.returnValue = false;
-    return false;
-  };
-
-  return draggable;
-}));
+}(jQuery));
