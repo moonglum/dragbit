@@ -21,6 +21,15 @@ To make the whole element draggable:
 $('#elementToDrag').draggable();
 ```
 
+To leave a transparent copy at the old location, activate the `shadowMode`:
+
+```js
+$('#shadow_mode').draggable({
+  shadowMode: true
+});
+```
+
+
 To make it draggable only when dragging the handle element:
 
 ```js

@@ -4,13 +4,15 @@
 /*global jQuery */
 (function ($) {
   "use strict";
-  var $currentElement, methods;
+  var $currentElement, $shadow, methods;
 
   methods = {
     fairlyHighZIndex: '10',
 
     setup: function ($element, settings) {
       $element.css("position", "absolute");
+      $element.data("shadowMode", settings.shadowMode);
+
       settings.handle.mousedown(function (e) {
         methods.startDragging(e, $element);
       });
@@ -33,6 +35,17 @@
     },
 
     startDragging: function (e, $element) {
+      var originalPosition = $element.position();
+      if ($element.data("shadowMode")) {
+        console.log("activated shadow mode");
+        $shadow = $element.clone();
+        $element.after($shadow);
+        $shadow.css("opacity", 0.3);
+      }
+      $element.prependTo($("body"));
+      $element.css("top", originalPosition.top);
+      $element.css("left", originalPosition.left);
+
       methods.bringToFront($element);
       $currentElement = $element;
       methods.moveCurrentElement(e, $currentElement.position());
@@ -46,6 +59,9 @@
     },
 
     stopDragging: function (e) {
+      if ($currentElement.data("shadowMode")) {
+        $shadow.remove();
+      }
       methods.removeDocumentListeners();
       $currentElement.trigger("dragStop", $currentElement.position());
     },
@@ -91,7 +107,8 @@
       handle: this,
       dragStart: function () {},
       dragging: function () {},
-      dragStop: function () {}
+      dragStop: function () {},
+      shadowMode: false
     }, options);
 
     methods.setup(this, settings);
