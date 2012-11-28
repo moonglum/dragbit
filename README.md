@@ -29,13 +29,20 @@ $('#shadow_mode').draggable({
 });
 ```
 
-
 To make it draggable only when dragging the handle element:
 
 ```js
 var $with_handle = $('#elementToDrag');
 $with_handle.draggable({
   handle: $('span', with_handle)
+});
+```
+
+You can also lock one axis to only move the element on one axis:
+
+```js
+$('#elementToDrag').draggable({
+  moveY: false
 });
 ```
 

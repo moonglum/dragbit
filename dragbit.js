@@ -12,6 +12,8 @@
     setup: function ($element, settings) {
       $element.css("position", "absolute");
       $element.data("shadowMode", settings.shadowMode);
+      $element.data("moveX", settings.moveX);
+      $element.data("moveY", settings.moveY);
 
       settings.handle.mousedown(function (e) {
         methods.startDragging(e, $element);
@@ -74,10 +76,15 @@
     },
 
     moveCurrentElement: function (e, position) {
-      $currentElement.css("left", position.left);
-      $currentElement.css("top", position.top);
-      $currentElement.data("lastXPosition", e.clientX);
-      $currentElement.data("lastYPosition", e.clientY);
+      if ($currentElement.data("moveX")) {
+        $currentElement.css("left", position.left);
+        $currentElement.data("lastXPosition", e.clientX);
+      }
+
+      if ($currentElement.data("moveY")) {
+        $currentElement.css("top", position.top);
+        $currentElement.data("lastYPosition", e.clientY);
+      }
     },
 
     calculateNewPosition: function (e) {
@@ -108,7 +115,9 @@
       dragStart: function () {},
       dragging: function () {},
       dragStop: function () {},
-      shadowMode: false
+      shadowMode: false,
+      moveX: true,
+      moveY: true
     }, options);
 
     methods.setup(this, settings);
