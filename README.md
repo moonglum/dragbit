@@ -46,6 +46,14 @@ $('#elementToDrag').draggable({
 });
 ```
 
+The element can also be locked in its parent element:
+
+```js
+$('#elementToDrag').draggable({
+  lockInContainer: true
+});
+```
+
 You can add the events `dragStart`, `dragging` and `dragStop` to the element via the normal `bind` of jQuery. You can also bind them when calling `draggable`:
 
 ```js

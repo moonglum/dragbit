@@ -64,6 +64,12 @@ code {
   width: auto;
 }
 
+.containerWithBorder {
+  border: 1px solid black;
+  width: 200px;
+  height: 200px;
+}
+
 .source {
   margin-bottom: 30px;
   float: right;

@@ -14,6 +14,8 @@
       $element.data("shadowMode", settings.shadowMode);
       $element.data("moveX", settings.moveX);
       $element.data("moveY", settings.moveY);
+      $element.data("lockInContainer", settings.lockInContainer);
+      $element.data("container", $element.parent());
 
       settings.handle.mousedown(function (e) {
         methods.startDragging(e, $element);
@@ -64,6 +66,9 @@
       if ($currentElement.data("shadowMode")) {
         $shadow.remove();
       }
+      if ($currentElement.data("lockInContainer")) {
+        $currentElement.data("container").append($currentElement);
+      }
       methods.removeDocumentListeners();
       $currentElement.trigger("dragStop", $currentElement.position());
     },
@@ -76,15 +81,53 @@
     },
 
     moveCurrentElement: function (e, position) {
-      if ($currentElement.data("moveX")) {
-        $currentElement.css("left", position.left);
-        $currentElement.data("lastXPosition", e.clientX);
+      if (!$currentElement.data("lockInContainer") || methods.checkBoundaries(position)) {
+        if ($currentElement.data("moveX")) {
+          $currentElement.css("left", position.left);
+          $currentElement.data("lastXPosition", e.clientX);
+        }
+
+        if ($currentElement.data("moveY")) {
+          $currentElement.css("top", position.top);
+          $currentElement.data("lastYPosition", e.clientY);
+        }
+      }
+    },
+
+    checkBoundaries: function (position) {
+      var allowed = true,
+        $container = $currentElement.data("container"),
+        container_top = $container.position().top,
+        container_left = $container.position().left,
+        container_width = parseInt($container.css("width"), 10),
+        container_right = container_left + container_width,
+        container_height = parseInt($container.css("height"), 10),
+        container_bottom = $container.position().top + container_height,
+        element_top = position.top,
+        element_left = position.left,
+        element_width = parseInt($currentElement.css("width"), 10),
+        element_right = element_left + element_width,
+        element_height = parseInt($currentElement.css("height"), 10),
+        element_bottom = element_top + element_height;
+
+      if (container_top > element_top) {
+        $currentElement.css("top", container_top + 1);
+        allowed = false;
+      }
+      if (container_left > element_left) {
+        $currentElement.css("left", container_left + 1);
+        allowed = false;
+      }
+      if (container_right < element_right) {
+        $currentElement.css("left", container_right - element_width - 1);
+        allowed = false;
+      }
+      if (container_bottom < element_bottom) {
+        $currentElement.css("top", container_bottom - element_height - 1);
+        allowed = false;
       }
 
-      if ($currentElement.data("moveY")) {
-        $currentElement.css("top", position.top);
-        $currentElement.data("lastYPosition", e.clientY);
-      }
+      return allowed;
     },
 
     calculateNewPosition: function (e) {
@@ -117,7 +160,8 @@
       dragStop: function () {},
       shadowMode: false,
       moveX: true,
-      moveY: true
+      moveY: true,
+      lockInContainer: false
     }, options);
 
     methods.setup(this, settings);

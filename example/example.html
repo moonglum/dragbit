@@ -83,7 +83,24 @@
     </div>
   </div>
 
-  <h2>Example #5: Events!</h2>
+  <h2>Example #5: Lock in container</h2>
+  <div class="example">
+    <div class="container containerWithBorder">
+      <div id="lockInContainer" class="draggable">
+        <span>#lockInContainer</span>
+      </div>
+    </div>
+
+    <div class="source depressed">
+      <pre><code class="javascript">
+  $('#lockInContainer').draggable({
+    lockInContainer: true
+  });
+      </code></pre>
+    </div>
+  </div>
+
+  <h2>Example #6: Events!</h2>
   <div class="example">
     <div class="container">
       <div id="events" class="draggable">
