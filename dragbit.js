@@ -153,18 +153,20 @@
   };
 
   $.fn.draggable = function (options) {
-    var settings = $.extend({
-      handle: this,
-      dragStart: function () {},
-      dragging: function () {},
-      dragStop: function () {},
-      shadowMode: false,
-      moveX: true,
-      moveY: true,
-      lockInContainer: false
-    }, options);
+    this.each(function () {
+      var settings = $.extend({
+        handle: $(this),
+        dragStart: function () {},
+        dragging: function () {},
+        dragStop: function () {},
+        shadowMode: false,
+        moveX: true,
+        moveY: true,
+        lockInContainer: false
+      }, options);
 
-    methods.setup(this, settings);
+      methods.setup($(this), settings);
+    });
 
     return this;
   };
