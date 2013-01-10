@@ -11,6 +11,9 @@
 
     setup: function ($element, settings) {
       $element.css("position", "absolute");
+      $element.css("left", settings.originalPosition.left);
+      $element.css("top", settings.originalPosition.top);
+
       $element.data("shadowMode", settings.shadowMode);
       $element.data("moveX", settings.moveX);
       $element.data("moveY", settings.moveY);
@@ -41,7 +44,6 @@
     startDragging: function (e, $element) {
       var originalPosition = $element.position();
       if ($element.data("shadowMode")) {
-        console.log("activated shadow mode");
         $shadow = $element.clone();
         $element.after($shadow);
         $shadow.css("opacity", 0.3);
@@ -154,18 +156,24 @@
 
   $.fn.draggable = function (options) {
     this.each(function () {
-      var settings = $.extend({
-        handle: $(this),
-        dragStart: function () {},
-        dragging: function () {},
-        dragStop: function () {},
-        shadowMode: false,
-        moveX: true,
-        moveY: true,
-        lockInContainer: false
-      }, options);
+      var $element = $(this),
+        settings = $.extend({
+          handle: $element,
+          dragStart: function () {},
+          dragging: function () {},
+          dragStop: function () {},
+          shadowMode: false,
+          moveX: true,
+          moveY: true,
+          lockInContainer: false,
+          originalPosition: $element.position()
+        }, options);
 
-      methods.setup($(this), settings);
+      // WEIRD: If you do not wait, the position will already be wrong
+      setTimeout(function() {
+        methods.setup($element, settings);
+      }, 100);
+
     });
 
     return this;
