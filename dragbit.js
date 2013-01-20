@@ -83,6 +83,7 @@
     },
 
     moveCurrentElement: function (e, position) {
+      window.getSelection().removeAllRanges(); // for Firefox
       if (!$currentElement.data("lockInContainer") || methods.checkBoundaries(position)) {
         if ($currentElement.data("moveX")) {
           $currentElement.css("left", position.left);
@@ -149,6 +150,7 @@
       if (e.stopPropagation) {
         e.stopPropagation();
       }
+
       e.returnValue = false;
       return false;
     }
