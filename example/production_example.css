@@ -49,12 +49,12 @@ li.note > a > p{
   font-family:"Reenie Beanie",arial,sans-serif;
   font-size:150%;
 }
-li.note {
+li.note.note-style-0 {
   -webkit-transform: rotate(-6deg);
   -o-transform: rotate(-6deg);
   -moz-transform:rotate(-6deg);
 }
-li.note:nth-child(even) {
+li.note.note-style-1 {
   -o-transform:rotate(4deg);
   -webkit-transform:rotate(4deg);
   -moz-transform:rotate(4deg);
@@ -62,7 +62,7 @@ li.note:nth-child(even) {
   top:5px;
   background:#cfc;
 }
-li.note:nth-child(3n) > a{
+li.note.note-style-2 {
   -o-transform:rotate(-3deg);
   -webkit-transform:rotate(-3deg);
   -moz-transform:rotate(-3deg);
@@ -70,7 +70,7 @@ li.note:nth-child(3n) > a{
   top:-5px;
   background:#ccf;
 }
-li.note:nth-child(5n) > a{
+li.note.note-style-3 {
   -o-transform:rotate(5deg);
   -webkit-transform:rotate(5deg);
   -moz-transform:rotate(5deg);
