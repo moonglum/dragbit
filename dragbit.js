@@ -42,7 +42,7 @@
     },
 
     startDragging: function (e, $element) {
-      var originalPosition = $element.position();
+      var originalPosition = $element.offset();
       if ($element.data("shadowMode")) {
         $shadow = $element.clone();
         $element.after($shadow);
@@ -54,14 +54,14 @@
 
       methods.bringToFront($element);
       $currentElement = $element;
-      methods.moveCurrentElement(e, $currentElement.position());
+      methods.moveCurrentElement(e, $currentElement.offset());
       methods.addDocumentListeners();
-      $currentElement.trigger("dragStart", $currentElement.position());
+      $currentElement.trigger("dragStart", $currentElement.offset());
     },
 
     continueDragging: function (e) {
       methods.moveCurrentElement(e, methods.calculateNewPosition(e));
-      $currentElement.trigger("dragging", $currentElement.position());
+      $currentElement.trigger("dragging", $currentElement.offset());
     },
 
     stopDragging: function (e) {
@@ -69,10 +69,13 @@
         $shadow.remove();
       }
       if ($currentElement.data("lockInContainer")) {
+        var offset = $currentElement.offset();
         $currentElement.data("container").append($currentElement);
+        $currentElement.css("left", offset.left - $currentElement.data("container").offset().left);
+        $currentElement.css("top", offset.top - $currentElement.data("container").offset().top);
       }
       methods.removeDocumentListeners();
-      $currentElement.trigger("dragStop", $currentElement.position());
+      $currentElement.trigger("dragStop", $currentElement.offset());
     },
 
     bringToFront: function ($element) {
@@ -100,12 +103,12 @@
     checkBoundaries: function (position) {
       var allowed = true,
         $container = $currentElement.data("container"),
-        container_top = $container.position().top,
-        container_left = $container.position().left,
+        container_top = $container.offset().top,
+        container_left = $container.offset().left,
         container_width = parseInt($container.css("width"), 10),
         container_right = container_left + container_width,
         container_height = parseInt($container.css("height"), 10),
-        container_bottom = $container.position().top + container_height,
+        container_bottom = $container.offset().top + container_height,
         element_top = position.top,
         element_left = position.left,
         element_width = parseInt($currentElement.css("width"), 10),

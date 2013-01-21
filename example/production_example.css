@@ -3,6 +3,8 @@ taken from http://net.tutsplus.com/tutorials/html-css-techniques/create-a-sticky
 */
 
 .notes {
+  position: absolute;
+  left: 100px;
   list-style:none;
   overflow:hidden;
   padding:3em;
