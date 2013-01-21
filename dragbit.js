@@ -21,7 +21,9 @@
       $element.data("container", $element.parent());
 
       settings.handle.mousedown(function (e) {
-        methods.startDragging(e, $element);
+        if (e.which === 1) { // only drag with left mouse button
+          methods.startDragging(e, $element);
+        }
       });
 
       $element.bind("dragStart", settings.dragStart);
